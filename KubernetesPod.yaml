@@ -6,16 +6,23 @@ labels:
 spec:
   # Use service account that can deploy to all namespaces
   containers:
-  - name: gcloud
-    image:  gcr.io/cloud-builders/gcloud
+  - name: cloud-sdk
+    image: gcr.io/google.com/cloudsdktool/cloud-sdk
+    imagePullPolicy: Always
+    env:  
+      - name: CLOUDSDK_CONTAINER_CLUSTER
+        value: belgium-01
+      - name: CLOUDSDK_COMPUTE_ZONE
+        value: europe-west1-d
     command:
       - sleep
-    args: 
+    args:   
       - infinity
   - name: docker
-    image: gcr.io/cloud-builders/docker
-    command:
-      - sleep
+    image: docker:20.10.12-alpine3.15       
+    imagePullPolicy: IfNotPresent
+    command:         
+      - sleep        
     args: 
       - infinity
     volumeMounts:
