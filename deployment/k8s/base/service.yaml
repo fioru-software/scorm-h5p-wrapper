@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: scrom-h5p-wrapper-service
+  name: scorm-h5p-wrapper-service
   labels:
-    app: scrom-h5p-wrapper-service
+    app: scorm-h5p-wrapper-service
 spec:
   selector:
-    app: scrom-h5p-wrapper
+    app: scorm-h5p-wrapper
   ports:
   - name: http
     protocol: TCP

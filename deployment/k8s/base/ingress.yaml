@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: scrom-h5p-wrapper-ingress
+  name: scorm-h5p-wrapper-ingress
   annotations:
     nginx.ingress.kubernetes.io/auth-url: https://basic-auth.veri.ie/
     nginx.ingress.kubernetes.io/proxy-body-size: "20m"
@@ -20,9 +20,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: scrom-h5p-wrapper-service
+            name: scorm-h5p-wrapper-service
             port:
               number: 8080
   tls:
   - hosts:
-    - scrom-h5p-wrapper.veri.ie
+    - scorm-h5p-wrapper.veri.ie
