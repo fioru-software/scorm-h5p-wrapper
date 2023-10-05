@@ -77,7 +77,7 @@ pipeline {
             steps {
                 container('cloud-sdk') {
                     script {
-                        sh "kubectl --token=$GCLOUD_TOKEN apply -k deployment/k8s/base"
+                        sh "kubectl --token=$GCLOUD_TOKEN apply -k deployment/k8s/overlays/staging"
                         sh "kubectl --token=$GCLOUD_TOKEN rollout restart deployment ${IMAGE_NAME}"
                         sh "kubectl --token=$GCLOUD_TOKEN rollout status deployment ${IMAGE_NAME}"
                     }
