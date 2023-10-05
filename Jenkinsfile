@@ -10,6 +10,11 @@ void setBuildStatus(String message, String state, String repo ) {
 
 pipeline {
 
+    parameters {
+        gitParameter(name: "BRANCH_NAME", type: "PT_BRANCH", defaultValue: "master", branchFilter: "origin/(master|staging)")
+        booleanParam(name: 'DEPLOY', defaultValue: false, description: "Deploy To Kubernetes")
+    }
+
     agent {
         kubernetes {
             inheritFrom 'jenkins-agent'
@@ -30,6 +35,15 @@ pipeline {
 
         stage('Build') {
 
+            when {
+                beforeAgent true;
+                allOf {
+                    expression {return params.DEPLOY}
+                    anyOf {
+                        branch 'master';    
+                    }    
+                }    
+            }
             steps {
                 container('gcloud') {
                     script {
@@ -45,6 +59,27 @@ pipeline {
                         sh 'docker tag ${IMAGE_NAME}:${COMMIT_SHA} eu.gcr.io/veri-cluster/${IMAGE_NAME}:latest'
                         sh 'docker push eu.gcr.io/veri-cluster/${IMAGE_NAME}:${COMMIT_SHA}'
                         sh 'docker push eu.gcr.io/veri-cluster/${IMAGE_NAME}:latest'
+                    }
+                }
+            }
+        }
+
+        stage ('Deploy') {    
+            when {    
+                beforeAgent true;    
+                allOf {    
+                    expression {return params.DEPLOY}    
+                    anyOf {    
+                        branch 'master';    
+                    }    
+                }
+            }
+            steps {
+                container('cloud-sdk') {
+                    script {
+                        sh "kubectl --token=$GCLOUD_TOKEN apply -k deployment/k8s/base"
+                        sh "kubectl --token=$GCLOUD_TOKEN rollout restart deployment ${IMAGE_NAME}"
+                        sh "kubectl --token=$GCLOUD_TOKEN rollout status deployment ${IMAGE_NAME}"
                     }
                 }
             }
