@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+labels:
+  component: ci
+spec:
+  # Use service account that can deploy to all namespaces
+  containers:
+  - name: gcloud
+    image:  gcr.io/cloud-builders/gcloud
+    command:
+      - sleep
+    args: 
+      - infinity
+  - name: docker
+    image: gcr.io/cloud-builders/docker
+    command:
+      - sleep
+    args: 
+      - infinity
+    volumeMounts:
+      - name: docker
+        mountPath: /var/run/docker.sock # We use the k8s host docker engine
+  volumes:
+  - name: docker
+    hostPath:
+      path: /var/run/docker.sock

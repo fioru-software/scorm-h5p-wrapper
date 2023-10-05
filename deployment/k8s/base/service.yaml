@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scrom-h5p-wrapper-service
+  labels:
+    app: scrom-h5p-wrapper-service
+spec:
+  selector:
+    app: scrom-h5p-wrapper
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 80
