@@ -45,7 +45,7 @@ pipeline {
                 }    
             }
             steps {
-                container('gcloud') {
+                container('gcloud-sdk') {
                     script {
                         sh 'gcloud auth activate-service-account jenkins-agent@veri-cluster.iam.gserviceaccount.com  --key-file=${GCLOUD_KEYFILE}'
                         env.GCLOUD_TOKEN = sh(script: "gcloud auth print-access-token", returnStdout: true).trim()
