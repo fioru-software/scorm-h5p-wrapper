@@ -11,7 +11,6 @@ void setBuildStatus(String message, String state, String repo ) {
 pipeline {
 
     parameters {
-        gitParameter(name: "BRANCH_NAME", type: "PT_BRANCH", defaultValue: "master", branchFilter: "origin/(master|staging)")
         booleanParam(name: 'DEPLOY', defaultValue: false, description: "Deploy To Kubernetes")
     }
 
@@ -27,7 +26,6 @@ pipeline {
         REPO_NAME = "fioru-software/$IMAGE_NAME"
         GITHUB_API_URL = "https://api.github.com/repos/$REPO_NAME"
         GITHUB_TOKEN = credentials('jenkins-github-personal-access-token')
-        COMMIT_SHA = sh(script: "git log -1 --format=%H", returnStdout:true).trim()
         GCLOUD_KEYFILE = credentials('jenkins-gcloud-keyfile');
     }
 
@@ -54,10 +52,10 @@ pipeline {
                 container('docker') {
                     script {
                         sh 'docker login -u oauth2accesstoken -p $GCLOUD_TOKEN https://eu.gcr.io'
-                        sh 'docker build --tag ${IMAGE_NAME}:${COMMIT_SHA} .'
-                        sh 'docker tag ${IMAGE_NAME}:${COMMIT_SHA} eu.gcr.io/veri-cluster/${IMAGE_NAME}:${COMMIT_SHA}'
-                        sh 'docker tag ${IMAGE_NAME}:${COMMIT_SHA} eu.gcr.io/veri-cluster/${IMAGE_NAME}:latest'
-                        sh 'docker push eu.gcr.io/veri-cluster/${IMAGE_NAME}:${COMMIT_SHA}'
+                        sh 'docker build --tag ${IMAGE_NAME}:${GIT_COMMIT} .'
+                        sh 'docker tag ${IMAGE_NAME}:${GIT_COMMIT} eu.gcr.io/veri-cluster/${IMAGE_NAME}:${GIT_COMMIT}'
+                        sh 'docker tag ${IMAGE_NAME}:${GIT_COMMIT} eu.gcr.io/veri-cluster/${IMAGE_NAME}:latest'
+                        sh 'docker push eu.gcr.io/veri-cluster/${IMAGE_NAME}:${GIT_COMMIT}'
                         sh 'docker push eu.gcr.io/veri-cluster/${IMAGE_NAME}:latest'
                     }
                 }
