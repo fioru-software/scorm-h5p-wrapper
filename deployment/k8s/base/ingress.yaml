@@ -4,8 +4,8 @@ metadata:
   name: scorm-h5p-wrapper-ingress
   annotations:
     nginx.ingress.kubernetes.io/auth-url: https://basic-auth.veri.ie/
-    nginx.ingress.kubernetes.io/proxy-body-size: "60m"
-    nginx.ingress.kubernetes.io/client-max-body-size: "60m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "200m"
+    nginx.ingress.kubernetes.io/client-max-body-size: "200m"
     nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
