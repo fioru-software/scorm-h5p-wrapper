@@ -6,6 +6,8 @@ RUN npm ci --only=production
 COPY . .
 RUN npm run copy-h5p-standalone
 RUN rm -rf src/template/frame.bundle.js
-COPY edited-h5p-standalone/frame.bundle.js src/template
+RUN rm -rf src/template/main.bundle.js
+RUN rm -rf src/template/h5p-adaptor.js
+COPY edited-h5p-standalone/* src/template
 EXPOSE 80
 CMD [ "npm", "start" ]
