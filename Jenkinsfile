@@ -22,6 +22,7 @@ pipeline {
     }
 
     environment {
+		DOCKER_REGISTRY = 'europe-west1-docker.pkg.dev/veri-cluster/docker-belgium'
         IMAGE_NAME = "scorm-h5p-wrapper"
         REPO_NAME = "fioru-software/$IMAGE_NAME"
         GITHUB_API_URL = "https://api.github.com/repos/$REPO_NAME"
@@ -51,12 +52,12 @@ pipeline {
                 }
                 container('docker') {
                     script {
-                        sh 'docker login -u oauth2accesstoken -p $GCLOUD_TOKEN https://eu.gcr.io'
+                        sh 'docker login -u oauth2accesstoken -p $GCLOUD_TOKEN https://$DOCKER_REGISTRY'
                         sh 'docker build --tag ${IMAGE_NAME}:${GIT_COMMIT} .'
-                        sh 'docker tag ${IMAGE_NAME}:${GIT_COMMIT} eu.gcr.io/veri-cluster/${IMAGE_NAME}:${GIT_COMMIT}'
-                        sh 'docker tag ${IMAGE_NAME}:${GIT_COMMIT} eu.gcr.io/veri-cluster/${IMAGE_NAME}:latest'
-                        sh 'docker push eu.gcr.io/veri-cluster/${IMAGE_NAME}:${GIT_COMMIT}'
-                        sh 'docker push eu.gcr.io/veri-cluster/${IMAGE_NAME}:latest'
+                        sh 'docker tag ${IMAGE_NAME}:${GIT_COMMIT} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${GIT_COMMIT}'
+                        sh 'docker tag ${IMAGE_NAME}:${GIT_COMMIT} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest'
+                        sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${GIT_COMMIT}'
+                        sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest'
                     }
                 }
             }
