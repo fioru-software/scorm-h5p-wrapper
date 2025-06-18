@@ -3,6 +3,6 @@ namePrefix: staging-
 generatorOptions:
   disableNameSuffixHash: true
 
-bases:
+resources:
   - ../../base
 
